@@ -21,9 +21,10 @@ class TestInput_fn(TestCase):
 
     def test_output_fn(self):
         # Arrange
+        tensor_out = torch.rand((1000, 2))
 
         # Act
-        actual = output_fn(torch.rand((1000,2)), "application/json")
+        actual = output_fn(tensor_out, "application/json")
 
         # Assert
         self.assertIsInstance(actual, str)
