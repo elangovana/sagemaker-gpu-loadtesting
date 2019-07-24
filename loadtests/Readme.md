@@ -44,7 +44,7 @@
 1. Kick off loadttest. In this example below, the region is https://runtime.sagemaker.ap-southeast-2.amazonaws.com
     
     ```bash
-    locust -f loadtest/stress.py --host=https://runtime.sagemaker.ap-southeast-2.amazonaws.com
+    locust -f loadtests/stress.py --host=https://runtime.sagemaker.ap-southeast-2.amazonaws.com
     
     ```
 
