@@ -1,12 +1,12 @@
 import os
 from unittest import TestCase
 
-import numpy as np
-
-from sm_inference import input_fn
+from sm_inference import output_fn, input_fn
+import torch
 
 
 class TestInput_fn(TestCase):
+
     def test_input_fn(self):
         # Arrange
         img_name = os.path.join(os.path.dirname(__file__), "images", "39672681_1302d204d1.jpg")
@@ -18,3 +18,12 @@ class TestInput_fn(TestCase):
 
         # Assert
         self.assertEqual(len(actual.shape), 4)
+
+    def test_output_fn(self):
+        # Arrange
+
+        # Act
+        actual = output_fn(torch.rand((1000,2)), "application/json")
+
+        # Assert
+        self.assertIsInstance(actual, str)
