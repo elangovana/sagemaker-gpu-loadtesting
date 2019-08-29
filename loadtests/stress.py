@@ -1,13 +1,15 @@
-from locust import HttpLocust, TaskSet, task
+import time
+from locust import HttpLocust, TaskSet, task, events
 import boto3
 import json
 
 import os
 
 
-class SageMakerConfig:
+class SageMakerEndpointTastSet(TaskSet):
 
-    def __init__(self):
+    def __init__(self, parent):
+        super().__init__(parent)
         self.__config__ = None
 
     @property
@@ -28,13 +30,6 @@ class SageMakerConfig:
         with open(config_file, "r") as c:
             return json.loads(c.read())
 
-
-class SageMakerEndpointTastSet(TaskSet):
-
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.config = SageMakerConfig()
-
     @task
     def test_invoke(self):
         # Start run here
@@ -42,19 +37,46 @@ class SageMakerEndpointTastSet(TaskSet):
 
         sagemaker_client = boto3.client('sagemaker-runtime', region_name=region, endpoint_url=self.client.base_url)
 
-        #load image
-        img_name = os.path.join(os.path.dirname(__file__), self.config.data[0])
+        # load image
+        img_name = os.path.join(os.path.dirname(__file__), self.data[0])
         with open(img_name, "rb") as f:
             image_bytes = f.read()
 
+        response = self._locust_wrapper(self._invoke_endpoint, image_bytes, sagemaker_client)
+        body = response["Body"].read()
+
+    def _invoke_endpoint(self, image_bytes, sagemaker_client):
         response = sagemaker_client.invoke_endpoint(
-            EndpointName=self.config.endpointname,
+            EndpointName=self.endpointname,
             Body=image_bytes,
             ContentType='application/binary',
             Accept='application/json'
         )
 
-        body = response["Body"].read()
+        return response
+
+    def _locust_wrapper(self, func, *args, **kwargs):
+        """
+Locust wrapper so that the func fires the sucess and failure events for custom boto3 client
+        :param func: The function to invoke
+        :param args: args to use
+        :param kwargs:
+        :return:
+        """
+        start_time = time.time()
+        try:
+            result = func(*args, **kwargs)
+            total_time = int((time.time() - start_time) * 1000)
+            events.request_success.fire(request_type="boto3", name="invoke_endpoint", response_time=total_time,
+                                        response_length=0)
+
+            return result
+        except Exception as e:
+            total_time = int((time.time() - start_time) * 1000)
+            events.request_failure.fire(request_type="boto3", name="invoke_endpoint", response_time=total_time,
+                                        exception=e)
+
+            raise e
 
 
 class SageMakerEndpointLocust(HttpLocust):
