@@ -42,6 +42,7 @@ class SageMakerEndpointTastSet(TaskSet):
         with open(img_name, "rb") as f:
             image_bytes = f.read()
 
+        # Invoke sagemaker endpoint via the locust wrapper to track request times
         response = self._locust_wrapper(self._invoke_endpoint, image_bytes, sagemaker_client)
         body = response["Body"].read()
 
