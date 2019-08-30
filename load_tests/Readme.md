@@ -44,7 +44,7 @@
 1. Kick off loadttest. In this example below, the endopint is https://runtime.sagemaker.us-east-2.amazonaws.com/endpoints/myendoint-20119-08-29-06-26-00-622111/invocations
     
     ```bash
-    locust -f source/stress.py --host=https://runtime.sagemaker.us-east-2.amazonaws.com/endpoints/myendoint-20119-08-29-06-26-00-622111/invocations
+    locust -f stress.py --host=https://runtime.sagemaker.us-east-2.amazonaws.com/endpoints/myendoint-20119-08-29-06-26-00-622111/invocations
     
     ```
 
