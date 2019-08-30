@@ -33,7 +33,7 @@ phases:
       # Get AWS Account Id
       - export AWS_ACCOUNT_ID=$(echo $CODEBUILD_BUILD_ARN | cut -d':' -f 5)
       # Build docker image
-      - docker build -t $src_dir/$IMAGE_REPO_NAME:$LATEST_TAG $src_dir
+      - docker build -t $IMAGE_REPO_NAME:$LATEST_TAG -f $src_dir/Dockerfile $src_dir
       - docker tag $IMAGE_REPO_NAME:$LATEST_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
       - docker tag $IMAGE_REPO_NAME:$LATEST_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$VERSION_TAG
 
