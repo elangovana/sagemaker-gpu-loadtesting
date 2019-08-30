@@ -13,19 +13,15 @@ class SageMakerEndpointTastSet(TaskSet):
         self.__config__ = None
 
     @property
-    def endpointname(self):
-        return self.config["endpointName"]
-
-    @property
     def data(self):
         return self.config["dataPayload"]
 
     @property
     def config(self):
-        self.__config__ = self.__config__ or self.load_config()
+        self.__config__ = self.__config__ or self._load_config()
         return self.__config__
 
-    def load_config(self):
+    def _load_config(self):
         config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
         with open(config_file, "r") as c:
             return json.loads(c.read())
@@ -34,8 +30,9 @@ class SageMakerEndpointTastSet(TaskSet):
     def test_invoke(self):
         # Start run here
         region = self.client.base_url.split("://")[1].split(".")[2]
+        endpointname = self.client.base_url.split("/")[-2]
 
-        sagemaker_client = boto3.client('sagemaker-runtime', region_name=region, endpoint_url=self.client.base_url)
+        sagemaker_client = boto3.client('sagemaker-runtime', region_name=region)
 
         # load image
         img_name = os.path.join(os.path.dirname(__file__), self.data[0])
@@ -43,12 +40,12 @@ class SageMakerEndpointTastSet(TaskSet):
             image_bytes = f.read()
 
         # Invoke sagemaker endpoint via the locust wrapper to track request times
-        response = self._locust_wrapper(self._invoke_endpoint, image_bytes, sagemaker_client)
+        response = self._locust_wrapper(self._invoke_endpoint, image_bytes, sagemaker_client, endpointname)
         body = response["Body"].read()
 
-    def _invoke_endpoint(self, image_bytes, sagemaker_client):
+    def _invoke_endpoint(self, image_bytes, sagemaker_client, endpointname):
         response = sagemaker_client.invoke_endpoint(
-            EndpointName=self.endpointname,
+            EndpointName=endpointname,
             Body=image_bytes,
             ContentType='application/binary',
             Accept='application/json'
@@ -82,5 +79,5 @@ Locust wrapper so that the func fires the sucess and failure events for custom b
 
 class SageMakerEndpointLocust(HttpLocust):
     task_set = SageMakerEndpointTastSet
-    min_wait = 5000
-    max_wait = 15000
+    min_wait = 10
+    max_wait = 20
