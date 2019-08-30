@@ -26,7 +26,6 @@ phases:
       - export PYTHONPATH=./source
       ## Tests passed, so build docker
       - echo Building the Docker image...
-      - cd source
 
       ## Automate version tagging based on datetime for now, ideally should be tied to release tags
       - export LATEST_TAG=latest
