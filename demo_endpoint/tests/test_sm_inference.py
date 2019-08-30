@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase
 
-from sm_inference import output_fn, input_fn
+from src.sm_inference import output_fn, input_fn
 import torch
 
 

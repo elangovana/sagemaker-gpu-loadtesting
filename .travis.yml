@@ -4,8 +4,8 @@ python:
 install:
   - pip install pip==10.0.1
   - pip -V
-  - pip install --progress-bar off -r demo_endpoint/requirements.txt
+  - pip install --progress-bar off -r demo_endpoint/src/requirements.txt
 script:
-  - export PYTHONPATH=./demo_endpoint
-  - pytest --tb=short
+  - export PYTHONPATH=./demo_endpoint/src/
+  - pytest ./demo_endpoint/tests --tb=short
 

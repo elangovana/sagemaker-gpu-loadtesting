@@ -12,7 +12,7 @@ RUN pip install  awscli --upgrade
 
 #Set up working directory
 WORKDIR ${source_path}
-ENTRYPOINT  ["python"]
+ENTRYPOINT  ["locust"]
 
 #Default arguments to run test
-CMD ["main.py", "."]
+CMD ["stress.py", "-h"]
