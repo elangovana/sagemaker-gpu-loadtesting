@@ -22,7 +22,7 @@ phases:
     commands:
       # Run Tests
       - pip install -r $src_dir/requirements.txt
-      - pyflakes ./**/*.py
+      - pyflakes $src_dir/**/*.py
       - export PYTHONPATH=./source
       ## Tests passed, so build docker
       - echo Building the Docker image...
