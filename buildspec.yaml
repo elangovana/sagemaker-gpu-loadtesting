@@ -16,7 +16,7 @@ phases:
       - export IMAGE_REPO_NAME=sagemaker-stress-test
       # AWS cli version to login into ecr. This needs to be compatible with the version of boto3 in the requirements file
       - export awscli_version=1.16.35
-      - export src_dir=$CODEBUILD_SRC_DIR/loadtests
+      - export src_dir=$CODEBUILD_SRC_DIR/load_tests
 
   build:
     commands:
