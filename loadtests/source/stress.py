@@ -79,5 +79,5 @@ Locust wrapper so that the func fires the sucess and failure events for custom b
 
 class SageMakerEndpointLocust(HttpLocust):
     task_set = SageMakerEndpointTastSet
-    min_wait = 10
-    max_wait = 20
+    min_wait = 0
+    max_wait = 0

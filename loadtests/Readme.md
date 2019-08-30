@@ -39,12 +39,13 @@
   
 
 ## Run Loadtest
-1. In the [config.json](config.json), update the config which includes the endpoint name and the data to use for load testing..
+1. In the [config.json](source/config.json), update the config which includes the endpoint name and the data to use for load testing..
 
 1. Kick off loadttest. In this example below, the endopint is https://runtime.sagemaker.us-east-2.amazonaws.com/endpoints/myendoint-20119-08-29-06-26-00-622111/invocations
     
     ```bash
-    locust -f loadtests/stress.py --host=https://runtime.sagemaker.us-east-2.amazonaws.com/endpoints/myendoint-20119-08-29-06-26-00-622111/invocations
+    locust -f source/stress.py --host=https://runtime.sagemaker.us-east-2.amazonaws.com/endpoints/myendoint-20119-08-29-06-26-00-622111/invocations
     
     ```
 
+2. To set up a test rig using AWS batch, see [aws_batch/README.md](aws_batch/README.md)
